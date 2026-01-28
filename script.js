@@ -43,38 +43,78 @@ window.addEventListener('scroll', () => {
     }
 });
 
-// Contact Form Submission
-const contactForm = document.querySelector('.contact-form');
+// Initialize EmailJS
+(function() {
+    emailjs.init("aL31_o6qhGSGRBL93"); // Replace with your EmailJS Public Key
+})();
+
+// Contact Form Submission with EmailJS
+const contactForm = document.getElementById('contactForm');
 if (contactForm) {
     contactForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
         // Get form values
-        const name = this.querySelector('input[type="text"]').value;
-        const email = this.querySelector('input[type="email"]').value;
-        const message = this.querySelector('textarea').value;
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const message = document.getElementById('message').value;
+        const submitBtn = this.querySelector('.submit-btn');
         
-        // Simple validation
-        if (name.trim() && email.trim() && message.trim()) {
+        // Validation
+        if (!name.trim() || !email.trim() || !message.trim()) {
+            alert('Please fill in all fields');
+            return;
+        }
+        
+        // Show loading state
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Sending...';
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.7';
+        
+        // Prepare email parameters
+        const emailParams = {
+            to_email: 'tmanigandan0@gmail.com',
+            name: name,
+            email: email,
+            message: message
+        };
+        
+        // Send email using EmailJS
+        emailjs.send(
+            'service_sospxp8',      // Replace with your EmailJS Service ID
+            'template_dwkh5oe',     // Replace with your EmailJS Template ID
+            emailParams
+        )
+        .then(function(response) {
+            console.log('SUCCESS', response);
+            
             // Show success message
-            const submitBtn = this.querySelector('.submit-btn');
-            const originalText = submitBtn.textContent;
             submitBtn.textContent = 'Message Sent! ✓';
             submitBtn.style.background = '#48bb78';
             submitBtn.classList.add('animate-pulse');
             
             // Reset form
-            this.reset();
+            contactForm.reset();
             
-            // Restore button after 2 seconds
+            // Restore button after 3 seconds
             setTimeout(() => {
                 submitBtn.textContent = originalText;
                 submitBtn.style.background = '';
+                submitBtn.style.opacity = '1';
+                submitBtn.disabled = false;
                 submitBtn.classList.remove('animate-pulse');
-            }, 2000);
-        } else {
-            alert('Please fill in all fields');
-        }
+            }, 3000);
+        })
+        .catch(function(error) {
+            console.log('FAILED', error);
+            alert('Failed to send message. Please try again later.');
+            
+            // Restore button
+            submitBtn.textContent = originalText;
+            submitBtn.style.opacity = '1';
+            submitBtn.disabled = false;
+        });
     });
 }
 
