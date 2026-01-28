@@ -74,7 +74,7 @@ if (contactForm) {
         
         // Prepare email parameters
         const emailParams = {
-            to_email: 'tmanigandan0@gmail.com',
+            to_email: email,  // Send to the user's email address
             name: name,
             email: email,
             message: message
