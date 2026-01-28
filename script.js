@@ -56,12 +56,11 @@ if (contactForm) {
         
         // Get form values
         const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
         const message = document.getElementById('message').value;
         const submitBtn = this.querySelector('.submit-btn');
         
         // Validation
-        if (!name.trim() || !email.trim() || !message.trim()) {
+        if (!name.trim() || !message.trim()) {
             alert('Please fill in all fields');
             return;
         }
@@ -76,7 +75,6 @@ if (contactForm) {
         const emailParams = {
             to_email: 'tmanigandan01@gmail.com',
             name: name,
-            email: email,
             message: message
         };
         
